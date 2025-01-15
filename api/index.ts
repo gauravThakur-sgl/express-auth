@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -16,14 +15,13 @@ import entriesRoute from "../src/routes/entries.route";
 import userRouter from "../src/routes/userRoute";
 import eventRouter from "../src/routes/eventRoute";
 
-// Connect to database
-const connectToDB = require("./src/config/connectToDb");
-connectToDB();
 // Use routes
 app.use("/entries", entriesRoute);
 app.use("/users", userRouter);
 app.use("/events", eventRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.get("/", (req, res) => {
+  res.json("Welcome to the API");
 });
+
+export default app;
