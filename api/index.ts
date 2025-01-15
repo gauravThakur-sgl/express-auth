@@ -1,43 +1,29 @@
-const express = require("express");
-import { Request, Response } from "express";
-const path = require("path");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const entriesRoute = require("../src/routes/entries.route").default;
-const userRouter = require("../src/routes/userRoute").default;
-const eventRouter = require("../src/routes/eventRoute").default;
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
 dotenv.config();
-const app = express();
 
-const port = process.env.PORT || 3000;
-require("dotenv").config();
+const app = express();
+const port = process.env.PORT || 3001;
+
 app.use(cors());
 app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  }),
-);
+app.use(express.urlencoded({ extended: true }));
 
-//connect database
-const mongoUri = process.env.MONGODB_URI;
-if (mongoUri) {
-  mongoose.connect(mongoUri).catch((err: any) => console.log(err));
-} else {
-  console.error("MONGODB_URI is not defined in the environment variables");
-}
+// Import routes
+import entriesRoute from "../src/routes/entries.route";
+import userRouter from "../src/routes/userRoute";
+import eventRouter from "../src/routes/eventRoute";
 
-app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Hello World" });
-});
-
+// Connect to database
+const connectToDB = require("./src/config/connectToDb");
+connectToDB();
+// Use routes
 app.use("/entries", entriesRoute);
-app.use("/api/users", userRouter);
-app.use("/api/events", eventRouter);
-app.use("/static", express.static(path.join(__dirname, "public")));
+app.use("/users", userRouter);
+app.use("/events", eventRouter);
 
 app.listen(port, () => {
-  console.log(`Connected to DB and app listening on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
