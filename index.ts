@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 const entriesRoute = require("./src/routes/entries.route").default;
 const userRouter = require("./src/routes/userRoute").default;
 const eventRouter = require("./src/routes/eventRoute").default;
-const connectToDB = require('./src/config/connectToDB');
+const connectToDB = require('./src/config/connectToDB').default;
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
