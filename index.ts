@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const entriesRoute = require("./src/routes/entries.route").default;
 const userRouter = require("./src/routes/userRoute").default;
 const eventRouter = require("./src/routes/eventRoute").default;
+const connectToDB = require('./src/config/connectToDB');
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
@@ -20,17 +21,8 @@ app.use(
 );
 
 //connect database
+connectToDB()
 
-const mongoUri = process.env.MONGODB_URI;
-
-if (mongoUri) {
-  mongoose.connect(mongoUri).catch((err: any) => console.log(err));
-} else {
-  console.error("MONGODB_URI is not defined in the environment variables");
-}
-app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Hello World" });
-});
 
 app.use("/entries", entriesRoute);
 app.use("/api/users", userRouter);
