@@ -9,8 +9,11 @@ interface DecodedToken {
 export const requireAuth = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
-    if (!token || !process.env.JWT_SECRET) {
-      return res.status(500).json({ message: "internal server error" });
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: "JWT_Secret Not Found" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
